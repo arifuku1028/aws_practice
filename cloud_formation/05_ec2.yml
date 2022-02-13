@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: "CloudFormation Templete for creating EC2"
+
+Parameters:
+  PREFIX:
+    Type: String
+    Default: "practice"
+
+Resources:
+  # EC2 Instance(AZ:1a)
+  ec2Instance1a:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-08a8688fb7eacb171
+      InstanceType: t2.micro
+      KeyName: aws-practice
+      SubnetId: !ImportValue PublicSubnet1aId
+      SecurityGroupIds:
+        - !ImportValue EC2SecurityGroupId
+      IamInstanceProfile: !ImportValue S3AccessInstanceProfile
+      UserData: !Base64 |
+        #!/bin/bash -ex
+        yum update -y
+        yum install -y git gcc gcc-c++ patch rpm-build mysql mysql-devel gdbm-devel zlib-devel openssl-devel ruby-devel rubygems-devel ImageMagick-devel readline-devel libcurl-devel libffi-devel libicu-devel libxml2-devel libxslt-devel libyaml-devel
+        amazon-linux-extras install -y nginx1
+        curl -sL https://rpm.nodesource.com/setup_16.x | bash -
+        yum install -y nodejs
+        npm install -g yarn
+      Tags:
+        - Key: Name
+          Value: !Sub ${PREFIX}-ec2-1a
+  # EC2 Instance(AZ:1c)
+  ec2Instance1c:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-08a8688fb7eacb171
+      InstanceType: t2.micro
+      KeyName: aws-practice
+      SubnetId: !ImportValue PublicSubnet1cId
+      SecurityGroupIds:
+        - !ImportValue EC2SecurityGroupId
+      IamInstanceProfile: !ImportValue S3AccessInstanceProfile
+      UserData: !Base64 |
+        #!/bin/bash -ex
+        yum update -y
+        yum install -y git gcc gcc-c++ patch rpm-build mysql mysql-devel gdbm-devel zlib-devel openssl-devel ruby-devel rubygems-devel ImageMagick-devel readline-devel libcurl-devel libffi-devel libicu-devel libxml2-devel libxslt-devel libyaml-devel
+        amazon-linux-extras install -y nginx1
+        curl -sL https://rpm.nodesource.com/setup_16.x | bash -
+        yum install -y nodejs
+        npm install -g yarn
+      Tags:
+        - Key: Name
+          Value: !Sub ${PREFIX}-ec2-1c
+
+Outputs:
+  EC2Instance1aId:
+    Value: !Ref ec2Instance1a
+    Export:
+      Name: EC2Instance1aId
+  EC2Instance1cId:
+    Value: !Ref ec2Instance1c
+    Export:
+      Name: EC2Instance1cId

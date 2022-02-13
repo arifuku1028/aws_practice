@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "CloudFormation Templete for creating IAM Role"
+
+Parameters:
+  PREFIX:
+    Type: String
+    Default: practice
+
+Resources:
+  # IAM Role
+  s3AccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${PREFIX}-s3access-role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+  # Incetance Profile
+  s3AccessProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref s3AccessRole
+
+Outputs:
+  S3AccessInstanceProfile:
+    Value: !Ref s3AccessProfile
+    Export:
+      Name: S3AccessInstanceProfile
