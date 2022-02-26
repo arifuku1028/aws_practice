@@ -1,5 +1,5 @@
 # aws_practice
-- cloud_formation
+.cloud_formation
   CloudFormationで作成したテンプレート/構成図
-- server_spec
+. server_spec
   Serverspecで作成したテストコード等
