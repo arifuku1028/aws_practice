@@ -1,0 +1,82 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: "CloudFormation Templete for creating RDS"
+
+Parameters:
+  PREFIX:
+    Type: String
+    Default: "practice"
+
+Resources:
+  # DB Instance
+  myRDS:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      # データベース関係
+      DBInstanceIdentifier: !Sub ${PREFIX}-rds
+      DBInstanceClass: db.t2.micro
+      Engine: mysql
+      EngineVersion: 8.0.23
+      MasterUsername: admin
+      MasterUserPassword: password
+      DBName: !Sub ${PREFIX}
+      DBParameterGroupName: !Ref rdsParameterGroup
+      OptionGroupName: !Ref rdsOptionGroup
+      # ストレージ関係
+      AllocatedStorage: 20
+      StorageType: gp2
+      StorageEncrypted: false
+      # ネットワーク関係
+      AvailabilityZone: ap-northeast-1a
+      DBSubnetGroupName: !Ref rdsSubnetGroup
+      MultiAZ: false
+      Port: 3306
+      PubliclyAccessible: false
+      VPCSecurityGroups:
+        - !ImportValue RDSSecurityGroupId
+      # メンテナンス関係
+      PreferredBackupWindow: 02:00-03:00
+      BackupRetentionPeriod: 7
+      PreferredMaintenanceWindow: Mon:03:00-Mon:06:00
+      AutoMinorVersionUpgrade: true
+      # 削除保護
+      DeletionProtection: false
+      DeleteAutomatedBackups: false
+      # タグ
+      Tags:
+        - Key: Name
+          Value: !Sub ${PREFIX}-rds
+
+  # ParameterGroup
+  rdsParameterGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Description: "ParameterGroup for RDS"
+      Family: mysql8.0
+      Tags:
+        - Key: Name
+          Value: !Sub ${PREFIX}-rds-parametergroup
+
+  # OptionGroup
+  rdsOptionGroup:
+    Type: AWS::RDS::OptionGroup
+    Properties:
+      OptionGroupDescription: "OptionGroup for RDS"
+      EngineName: mysql
+      MajorEngineVersion: 8.0
+      Tags:
+        - Key: Name
+          Value: !Sub ${PREFIX}-rds-optiongroup
+
+  # SubnetGroup
+  rdsSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: "SubnetGroup for RDS"
+      DBSubnetGroupName: !Sub ${PREFIX}-rds-subnetgroup
+      SubnetIds:
+        - !ImportValue PrivateSubnet1aId
+        - !ImportValue PrivateSubnet1cId
+      Tags:
+        - Key: Name
+          Value: !Sub ${PREFIX}-rds-subnetgroup

@@ -1,0 +1,103 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: "CloudFormation Templete for creating Subnet"
+
+Parameters:
+  PREFIX:
+    Type: String
+    Default: "practice"
+
+Resources:
+  # PublicSubnet(AZ:1a)
+  publicSubnet1a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !ImportValue VPCId
+      AvailabilityZone: ap-northeast-1a
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${PREFIX}-public-subnet-1a
+  # PublicSubnet(AZ:1c)
+  publicSubnet1c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !ImportValue VPCId
+      AvailabilityZone: ap-northeast-1c
+      CidrBlock: 10.0.2.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${PREFIX}-public-subnet-1c
+
+  # PrivateSubnet(AZ:1a)
+  privateSubnet1a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !ImportValue VPCId
+      AvailabilityZone: ap-northeast-1a
+      CidrBlock: 10.0.11.0/24
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${PREFIX}-private-subnet-1a
+  # PrivateSubnet(AZ:1c)
+  privateSubnet1c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !ImportValue VPCId
+      AvailabilityZone: ap-northeast-1c
+      CidrBlock: 10.0.12.0/24
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${PREFIX}-private-subnet-1c
+
+  # RouteTable for PublicSubnet
+  publicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !ImportValue VPCId
+      Tags:
+        - Key: Name
+          Value: !Sub ${PREFIX}-rt
+
+  # Route for PublicSubnet
+  publicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref publicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !ImportValue IGWId
+
+  # RouteTable associate with PublicSubnet1a
+  publicRouteTableAssoc1a:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref publicSubnet1a
+      RouteTableId: !Ref publicRouteTable
+  # RouteTable associate with PublicSubnet1c
+  publicRouteTableAssoc1c:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref publicSubnet1c
+      RouteTableId: !Ref publicRouteTable
+
+Outputs:
+  PublicSubnet1aId:
+    Value: !Ref publicSubnet1a
+    Export:
+      Name: PublicSubnet1aId
+  PublicSubnet1cId:
+    Value: !Ref publicSubnet1c
+    Export:
+      Name: PublicSubnet1cId
+  PrivateSubnet1aId:
+    Value: !Ref privateSubnet1a
+    Export:
+      Name: PrivateSubnet1aId
+  PrivateSubnet1cId:
+    Value: !Ref privateSubnet1c
+    Export:
+      Name: PrivateSubnet1cId

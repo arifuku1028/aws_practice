@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: "CloudFormation Templete for creating ELB (ALB)"
+
+Parameters:
+  PREFIX:
+    Type: String
+    Default: "practice"
+
+Resources:
+  # ELB
+  myELB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub ${PREFIX}-elb
+      Scheme: internet-facing
+      Subnets:
+        - !ImportValue PublicSubnet1aId
+        - !ImportValue PublicSubnet1cId
+      SecurityGroups:
+        - !ImportValue ELBSecurityGroupId
+
+  # Listener
+  elbListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref elbTargetGroup
+          Type: forward
+      LoadBalancerArn: !Ref myELB
+      Port: 80
+      Protocol: HTTP
+
+  # TargetGroup
+  elbTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub ${PREFIX}-elb-tg
+      VpcId: !ImportValue VPCId
+      Protocol: HTTP
+      Port: 80
+      TargetGroupAttributes:
+        - Key: stickiness.enabled
+          Value: true
+        - Key: stickiness.type
+          Value: app_cookie
+        - Key: stickiness.app_cookie.cookie_name
+          Value: _practice_session
+        - Key: stickiness.app_cookie.duration_seconds
+          Value: 180
+      Targets:
+        - Id: !ImportValue EC2Instance1aId
+          Port: 80
+        - Id: !ImportValue EC2Instance1cId
+          Port: 80

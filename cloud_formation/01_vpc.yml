@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: "CloudFormation Templete for creating VPC"
+
+Parameters:
+  PREFIX:
+    Type: String
+    Default: "practice"
+
+Resources:
+  # VPC
+  myVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${PREFIX}-vpc
+
+  # IGW
+  myIgw:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub ${PREFIX}-igw
+
+  # IGW attach to VPC
+  attachIgw:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref myVpc
+      InternetGatewayId: !Ref myIgw
+
+Outputs:
+  VPCId:
+    Value: !Ref myVpc
+    Export:
+      Name: VPCId
+  IGWId:
+    Value: !Ref myIgw
+    Export:
+      Name: IGWId
