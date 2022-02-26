@@ -1,5 +1,5 @@
 # Serverspec Test-Code
-* テスト項目一覧（"practice/sample_spec.rb"にコード記述）
+* テスト項目一覧（"spec/practice/sample_spec.rb"にコード記述）
 	* ユーザーデータでインストールしたパッケージがインストールされているか確認
 	* Node.jsのインストール・バージョンを確認
 	* Nginxのインストール・設定ファイルの有無・起動を確認

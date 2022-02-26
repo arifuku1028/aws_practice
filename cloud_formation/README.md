@@ -1,4 +1,7 @@
 # CloudFormation Templates
+* 構成図
+	![構成図](cfn-diagram.png)
+
 * 01_vpc.yml
 	* VPCを作成
 	* IGWを作成
