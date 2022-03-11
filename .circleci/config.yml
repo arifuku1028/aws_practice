@@ -3,10 +3,12 @@
 version: 2.1
 
 executors:
-  my-executer:
+  my-executor:
     docker:
       - image: cimg/ruby:2.6.5-node
-      - image: cimg/python:3.10.2
+
+orbs:
+  cfn-lint: fatlama/cfn-lint@0.2.2
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -14,7 +16,7 @@ jobs:
   say-hello:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    executor: my-executer
+    executor: my-executor
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
@@ -23,7 +25,7 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
   check-env:
-    executor: my-executer
+    executor: my-executor
     steps:
       - checkout
       - run:
@@ -36,12 +38,12 @@ jobs:
           name: "check Python version"
           command: python3 --version
   cfn-lint:
-    executor: my-executer
+    executor: cfn-lint/default
     steps:
       - checkout
-      - run: sudo pip3 install cfn-lint
-      - run: cd cloud_formation
-      - run: cfn-lint 01_vpc.yml
+      - cfn-lint/lint
+          templates: cloud_formation/01_vpc.yml
+
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
@@ -49,6 +51,6 @@ workflows:
     jobs:
       - say-hello
       - check-env
-      - cfn-lint:
+      - cfn-lint/lint:
           requires:
             - check-env
