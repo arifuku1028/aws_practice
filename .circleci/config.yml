@@ -41,7 +41,7 @@ jobs:
     executor: cfn-lint/default
     steps:
       - checkout
-      - cfn-lint/lint
+      - cfn-lint/lint:
           templates: cloud_formation/01_vpc.yml
 
 # Invoke jobs via workflows
