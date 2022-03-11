@@ -38,6 +38,4 @@ workflows:
   my-workflow:
     jobs:
       - say-hello
-      - check-env:
-          requires:
-            - say-hello
+      - check-env
