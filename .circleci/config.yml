@@ -39,7 +39,7 @@ jobs:
     executor: my-executer
     steps:
       - checkout
-      - run: sudo pip install cfn-lint
+      - run: sudo pip3 install cfn-lint
       - run: cd cloud_formation
       - run: cfn-lint 01_vpc.yml
 # Invoke jobs via workflows
