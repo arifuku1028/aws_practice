@@ -36,7 +36,7 @@ jobs:
           name: "check Python version"
           command: python3 --version
   cfn-lint:
-    executor: my-executor
+    executor: my-executer
     steps:
       - checkout
       - run: sudo pip install cfn-lint
