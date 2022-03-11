@@ -31,13 +31,13 @@ jobs:
       - run:
           name: "check Node.js version"
           command: node --version
-  
+
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   my-workflow:
     jobs:
       - say-hello
-      - check-env
-          requires: 
+      - check-env:
+          requires:
             - say-hello
