@@ -2,14 +2,18 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+executors:
+  my-executer:
+    docker:
+      - image: cimg/ruby:2.6.5-node
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   say-hello:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker:
-      - image: cmig/base:stable
+    executor: my-executer
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
@@ -18,8 +22,7 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
   check-env:
-    docker:
-      - image: cmig/ruby:2.6.5-node
+    executor: my-executer
     steps:
       - checkout
       - run:
