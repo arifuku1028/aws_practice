@@ -25,7 +25,7 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
   check-cfn-templates:
-    executor: cfn-lint:default
+    executor: cfn-lint/default
     steps:
       - checkout
       - run:
