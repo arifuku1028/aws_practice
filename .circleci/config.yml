@@ -31,6 +31,9 @@ jobs:
       - cfn-lint/lint:
           templates: cloud_formation/01_vpc.yml
           regions: ap-northeast-1
+      - cfn-lint/lint:
+          templates: cloud_formation/02_subnet.yml
+          regions: ap-northeast-1
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
