@@ -35,7 +35,7 @@ jobs:
       - checkout
       - run:
           name: "install cfn-lint"
-          command: pip3 installcfn-lint
+          command: pip installcfn-lint
       - run:
           name: "check CloudFormation template"
           command: |
