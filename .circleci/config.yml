@@ -40,9 +40,4 @@ workflows:
   my-workflow:
     jobs:
       - say-hello
-      - check-env:
-          requires:
-            - say-hello
-      # - cfn-lint/lint:
-      #     requires:
-      #       - check-env
+      - check-cfn-templates:
