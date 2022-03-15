@@ -28,7 +28,6 @@ jobs:
             ls
   check-cfn-templates:
     executor: my-executor
-    working_directory: ~/cloud_formation
     steps:
       - checkout
       - run:
@@ -37,9 +36,7 @@ jobs:
             python3 -m pip install --upgrade pip
             pip install cfn-lint
       - run: |
-          pwd
-          ls
-      - run: |
+          cd cloud_formation
           cfn-lint --template 01_vpc.yml --region ap-northeast-1
           cfn-lint --template 02_subnet.yml --region ap-northeast-1
           cfn-lint --template 03_sg.yml --region ap-northeast-1
