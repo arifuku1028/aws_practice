@@ -28,7 +28,7 @@ jobs:
             pwd
             ls
   check-cfn-templates:
-    executor: my-ececutor
+    executor: my-executor
     steps:
       - checkout
       - run:
@@ -38,8 +38,7 @@ jobs:
             pip install cfn-lint
       - run:
           name: "Check CloudFormation templates"
-          command: |
-            cfn-lint --template cloud_formation/*.yml
+          command: cfn-lint --template cloud_formation/*.yml
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
