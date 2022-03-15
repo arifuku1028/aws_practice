@@ -54,8 +54,8 @@ workflows:
     jobs:
       - say-hello
       - check-env:
-        requires:
-          - say-hello
+          requires:
+            - say-hello
       # - cfn-lint/lint:
       #     requires:
       #       - check-env
