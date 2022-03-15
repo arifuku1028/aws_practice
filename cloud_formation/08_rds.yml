@@ -28,7 +28,6 @@ Resources:
       MasterUserPassword: !Ref MasterUserPASS
       DBName: !Sub ${PREFIX}
       DBParameterGroupName: !Ref rdsParameterGroup
-      OptionGroupName: !Ref rdsOptionGroup
       # ストレージ関係
       AllocatedStorage: 20
       StorageType: gp2
@@ -63,17 +62,6 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub ${PREFIX}-rds-parametergroup
-
-  # OptionGroup
-  rdsOptionGroup:
-    Type: AWS::RDS::OptionGroup
-    Properties:
-      OptionGroupDescription: "OptionGroup for RDS"
-      EngineName: mysql
-      MajorEngineVersion: "8.0"
-      Tags:
-        - Key: Name
-          Value: !Sub ${PREFIX}-rds-optiongroup
 
   # SubnetGroup
   rdsSubnetGroup:
