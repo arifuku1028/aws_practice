@@ -2,13 +2,11 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-orbs:
-  cfn-lint: fatlama/cfn-lint@0.2.2
-
 executors:
   my-executor:
     docker:
       - image: cimg/ruby:2.6.5-node
+      - image: cimg/python:3.10.2
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -24,16 +22,31 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
+      - run:
+          command: |
+            ruby --version
+            python3 --version
+            pwd
+            ls
   check-cfn-templates:
-    executor: cfn-lint/default
+    executor: my-excutor
+    working_directory: ~/cloud_formation
     steps:
       - checkout
-      - cfn-lint/lint:
-          templates: cloud_formation/01_vpc.yml
-          regions: ap-northeast-1
-      - cfn-lint/lint:
-          templates: cloud_formation/02_subnet.yml
-          regions: ap-northeast-1
+      - run:
+          name: "install cfn-lint"
+          command: pip3 installcfn-lint
+      - run:
+          name: "check CloudFormation template"
+          command: |
+            cfn-lint --template 01_vpc.yml --region ap-northeast-1
+            cfn-lint --template 02_subnet.yml --region ap-northeast-1
+            cfn-lint --template 03_sg.yml --region ap-northeast-1
+            cfn-lint --template 04_iam.yml --region ap-northeast-1
+            cfn-lint --template 05_ec2.yml --region ap-northeast-1
+            cfn-lint --template 06_elb.yml --region ap-northeast-1
+            cfn-lint --template 07_s3.yml --region ap-northeast-1
+            cfn-lint --template 08_rds.yml --region ap-northeast-1
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
