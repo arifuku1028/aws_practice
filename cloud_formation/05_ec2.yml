@@ -5,7 +5,7 @@ Description: "CloudFormation Templete for creating EC2"
 Parameters:
   PREFIX:
     Type: String
-    Default: "practice"
+    Default: practice
 
 Resources:
   # EC2 Instance(AZ:1a)

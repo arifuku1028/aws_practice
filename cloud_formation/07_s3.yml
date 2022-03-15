@@ -5,10 +5,10 @@ Description: "CloudFormation Templete for creating S3"
 Parameters:
   PREFIX:
     Type: String
-    Default: "practice"
+    Default: practice
   BucketName:
     Type: String
-    Default: "s3-20220210"
+    Default: s3-20220210
 
 Resources:
   # S3 Bucket

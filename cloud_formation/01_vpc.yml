@@ -5,7 +5,7 @@ Description: "CloudFormation Templete for creating VPC"
 Parameters:
   PREFIX:
     Type: String
-    Default: "practice"
+    Default: practice
 
 Resources:
   # VPC

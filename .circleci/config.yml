@@ -35,16 +35,11 @@ jobs:
           command: |
             python3 -m pip install --upgrade pip
             pip install cfn-lint
-      - run: |
-          cd cloud_formation
-          cfn-lint --template 01_vpc.yml --region ap-northeast-1
-          cfn-lint --template 02_subnet.yml --region ap-northeast-1
-          cfn-lint --template 03_sg.yml --region ap-northeast-1
-          cfn-lint --template 04_iam.yml --region ap-northeast-1
-          cfn-lint --template 05_ec2.yml --region ap-northeast-1
-          cfn-lint --template 06_elb.yml --region ap-northeast-1
-          cfn-lint --template 07_s3.yml --region ap-northeast-1
-          cfn-lint --template 08_rds.yml --region ap-northeast-1
+      - run:
+          name: "check CloudFormation templates"
+          command: |
+            cd cloud_formation
+            cfn-lint -t *.yml
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
