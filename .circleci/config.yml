@@ -28,11 +28,9 @@ jobs:
     executor: cfn-lint/default
     steps:
       - checkout
-      - run:
-          name: "check Python version"
-          command: python3 --version
       - cfn-lint/lint:
           templates: cloud_formation/01_vpc.yml
+          regions: ap-northeast-1
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
