@@ -23,7 +23,6 @@ jobs:
           command: "echo Hello, World!"
       - run:
           command: |
-            ruby --version
             python3 --version
             pwd
             ls
