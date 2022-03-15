@@ -37,6 +37,9 @@ jobs:
             python3 -m pip install --upgrade pip
             pip install cfn-lint
       - run: |
+          pwd
+          ls
+      - run: |
           cfn-lint --template 01_vpc.yml --region ap-northeast-1
           cfn-lint --template 02_subnet.yml --region ap-northeast-1
           cfn-lint --template 03_sg.yml --region ap-northeast-1
