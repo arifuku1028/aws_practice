@@ -25,7 +25,7 @@ jobs:
       - run:
           command: |
             ruby --version
-            python3 --version
+            python --version
             pwd
             ls
   check-cfn-templates:
@@ -36,17 +36,15 @@ jobs:
       - run:
           name: "install cfn-lint"
           command: pip installcfn-lint
-      - run:
-          name: "check CloudFormation template"
-          command: |
-            cfn-lint --template 01_vpc.yml --region ap-northeast-1
-            cfn-lint --template 02_subnet.yml --region ap-northeast-1
-            cfn-lint --template 03_sg.yml --region ap-northeast-1
-            cfn-lint --template 04_iam.yml --region ap-northeast-1
-            cfn-lint --template 05_ec2.yml --region ap-northeast-1
-            cfn-lint --template 06_elb.yml --region ap-northeast-1
-            cfn-lint --template 07_s3.yml --region ap-northeast-1
-            cfn-lint --template 08_rds.yml --region ap-northeast-1
+      - run: |
+          cfn-lint --template 01_vpc.yml --region ap-northeast-1
+          cfn-lint --template 02_subnet.yml --region ap-northeast-1
+          cfn-lint --template 03_sg.yml --region ap-northeast-1
+          cfn-lint --template 04_iam.yml --region ap-northeast-1
+          cfn-lint --template 05_ec2.yml --region ap-northeast-1
+          cfn-lint --template 06_elb.yml --region ap-northeast-1
+          cfn-lint --template 07_s3.yml --region ap-northeast-1
+          cfn-lint --template 08_rds.yml --region ap-northeast-1
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
