@@ -34,7 +34,9 @@ jobs:
       - checkout
       - run:
           name: "install cfn-lint"
-          command: python3 -m pip install cfn-lint
+          command: |
+            apt install python3-pip
+            pip3 install cfn-lint
       - run: |
           cfn-lint --template 01_vpc.yml --region ap-northeast-1
           cfn-lint --template 02_subnet.yml --region ap-northeast-1
