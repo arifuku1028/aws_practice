@@ -40,4 +40,4 @@ workflows:
   my-workflow:
     jobs:
       - say-hello
-      - check-cfn-templates:
+      - check-cfn-templates
