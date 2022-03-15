@@ -22,24 +22,24 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
       - run:
+          name: "Test commands"
           command: |
             python3 --version
             pwd
             ls
   check-cfn-templates:
-    executor: my-executor
+    executor: my-ececutor
     steps:
       - checkout
       - run:
-          name: "install cfn-lint"
+          name: "Install cfn-lint"
           command: |
             python3 -m pip install --upgrade pip
             pip install cfn-lint
       - run:
-          name: "check CloudFormation templates"
+          name: "Check CloudFormation templates"
           command: |
-            cd cloud_formation
-            cfn-lint -t *.yml
+            cfn-lint --template cloud_formation/*.yml
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
