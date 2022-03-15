@@ -1,0 +1,28 @@
+---
+# handlers file for ansible
+handlers:
+  - name: Change the listening port.
+    ansible.builtin.lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: "^Listen "
+      line: "Listen 8080"
+      validate: httpd -t -f %s
+    listen:
+      - start apache service
+
+  - name: Start "httpd.service".
+    ansible.builtin.systemd:
+      name: "{{ apache_service_name }}"
+      enabled: yes
+      state: started
+    listen:
+      - start apache service
+
+  - name: Drill a hole for the http port.
+    ansible.posix.firewalld:
+      port: "{{ http_port }}/tcp"
+      permanent: yes
+      immediate: yes
+      state: enabled
+    listen:
+      - start apache service

@@ -1,0 +1,5 @@
+---
+- name: Install Apache.
+  hosts: 54.250.205.125
+  become: yes
+  gather_facts: no

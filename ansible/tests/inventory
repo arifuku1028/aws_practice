@@ -1,0 +1,7 @@
+---                    # YAML は ”---" から開始する
+all:                   # "all" グループの宣言
+  hosts:                 # "all" グループに含まれるホストに関する情報を定義する宣言
+    ec2-instance:     # 管理対象ノードの情報を定義する宣言 
+      ansible_host: 54.250.205.125
+      ansible_user: ec2-user
+      ansible_ssh_private_key_file: ~/.ssh/aws-practice.pem

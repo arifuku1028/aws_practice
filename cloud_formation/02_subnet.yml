@@ -5,7 +5,13 @@ Description: "CloudFormation Templete for creating Subnet"
 Parameters:
   PREFIX:
     Type: String
-    Default: "practice"
+    Default: practice
+  AZ_a:
+    Type: String
+    Default: ap-northeast-1a
+  AZ_c:
+    Type: String
+    Default: ap-northeast-1c
 
 Resources:
   # PublicSubnet(AZ:1a)
@@ -13,7 +19,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !ImportValue VPCId
-      AvailabilityZone: ap-northeast-1a
+      AvailabilityZone: !Ref AZ_a
       CidrBlock: 10.0.1.0/24
       MapPublicIpOnLaunch: true
       Tags:
@@ -24,7 +30,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !ImportValue VPCId
-      AvailabilityZone: ap-northeast-1c
+      AvailabilityZone: !Ref AZ_c
       CidrBlock: 10.0.2.0/24
       MapPublicIpOnLaunch: true
       Tags:
@@ -36,7 +42,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !ImportValue VPCId
-      AvailabilityZone: ap-northeast-1a
+      AvailabilityZone: !Ref AZ_a
       CidrBlock: 10.0.11.0/24
       MapPublicIpOnLaunch: false
       Tags:
@@ -47,7 +53,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !ImportValue VPCId
-      AvailabilityZone: ap-northeast-1c
+      AvailabilityZone: !Ref AZ_c
       CidrBlock: 10.0.12.0/24
       MapPublicIpOnLaunch: false
       Tags:
