@@ -31,10 +31,8 @@ jobs:
       - run:
           name: "check Python version"
           command: python3 --version
-      - run:
-          name: "check CloudFormation templates"
-          command: cfn-lint/lint
-            templates: cloud_formation/01_vpc.yml
+      - cfn-lint/lint:
+          templates: cloud_formation/01_vpc.yml
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
