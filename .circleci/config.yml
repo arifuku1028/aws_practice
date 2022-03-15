@@ -2,13 +2,13 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+orbs:
+  cfn-lint: fatlama/cfn-lint@0.2.2
+
 executors:
   my-executor:
     docker:
       - image: cimg/ruby:2.6.5-node
-
-# orbs:
-#   cfn-lint: fatlama/cfn-lint@0.2.2
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -24,28 +24,17 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
-  check-env:
-    executor: my-executor
+  check-cfn-templates:
+    executor: cfn-lint:default
     steps:
       - checkout
-      - run:
-          name: "check Ruby version"
-          command: ruby --version
-      - run:
-          name: "check Node.js version"
-          command: node --version
       - run:
           name: "check Python version"
           command: python3 --version
       - run:
-          name: "check repository file"
-          command: cat cloud_formation/01_vpc.yml
-  # cfn-lint:
-  #   executor: cfn-lint/default
-  #   steps:
-  #     - checkout
-  #     - cfn-lint/lint:
-  #         templates: cloud_formation/01_vpc.yml
+          name: "check CloudFormation templates"
+          command: cfn-lint/lint
+            templates: cloud_formation/01_vpc.yml
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
