@@ -8,7 +8,7 @@ Parameters:
     Default: "practice"
   BucketName:
     Type: String
-    Default: "practice-s3-20220210"
+    Default: "s3-20220210"
 
 Resources:
   # S3 Bucket
@@ -30,4 +30,4 @@ Resources:
           Action:
             - s3:GetObject
             - s3:GetObjectVersion
-          Resource: !Sub arn:aws:s3:::${BucketName}/*
+          Resource: !Sub arn:aws:s3:::${PREFIX}-${BucketName}/*
