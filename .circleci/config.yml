@@ -54,11 +54,16 @@ jobs:
             gem install highline
             gem install serverspec
       - run:
+          name: SSH Connect
+          command: |
+            ssh -o StrictHostKeyChecking=no ${USER_NAME}@${HOST_NAME}
+            pwd
+            exit
+      - run:
           name: Test Server
           command: |
-            ssh ${USER_NAME}@${HOST_NAME} "mkdir /srv/rails-app && git pull origin main"
-            # cd server_spec
-            # rake spec
+            cd server_spec
+            rake spec
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
