@@ -5,7 +5,7 @@ version: 2.1
 executors:
   my-executor:
     docker:
-      - image: cimg/python:3.8
+      - image: cimg/base:stable
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -27,7 +27,8 @@ jobs:
             pwd
             ls
   check-cfn-templates:
-    executor: my-executor
+    docker:
+      image: cimg/python:3.8
     steps:
       - checkout
       - run:
@@ -40,7 +41,7 @@ jobs:
           command: cfn-lint --template cloud_formation/*.yml
   test-server:
     docker:
-      - image: cimg/ruby:3.1.1
+      - image: cimg/ruby:2.6.8
     steps:
       - checkout
       - run:
