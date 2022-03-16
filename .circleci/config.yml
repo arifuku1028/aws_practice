@@ -56,8 +56,9 @@ jobs:
       - run:
           name: Test Server
           command: |
-            cd server_spec
-            rake spec
+            ssh ${USER_NAME}@${HOST_NAME} "mkdir /srv/rails-app && git pull origin main"
+            # cd server_spec
+            # rake spec
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
