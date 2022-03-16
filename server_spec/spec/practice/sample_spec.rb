@@ -11,9 +11,9 @@ describe package("nodejs") do
   it { should be_installed.with_version("16") }
 end
 
-describe package("nginx"), :if => os[:family] == "amazon" do
-  it { should be_installed }
-end
+# describe package("nginx"), :if => os[:family] == "amazon" do
+#   it { should be_installed }
+# end
 
 describe file("/etc/nginx/conf.d/rails.conf") do
   it { should exist }
