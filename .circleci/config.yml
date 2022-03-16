@@ -41,12 +41,13 @@ jobs:
           command: cfn-lint --template cloud_formation/*.yml
   test-server:
     docker:
-      - image: cimg/ruby:2.6.8
+      - image: cimg/ruby:2.6
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
             - "64:89:d6:97:cd:b0:23:65:76:dc:ac:3d:e8:17:8b:a0"
+      - run: sudo spt-get install libpcap-dev
       - run:
           name: Install Serverspec
           command: |
@@ -56,7 +57,7 @@ jobs:
           name: Test Server
           command: |
             cd server_spec
-            rake spec
+            rake spec ASK_SUDO_PASSWORD=1
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
