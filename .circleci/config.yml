@@ -38,7 +38,7 @@ jobs:
       - run:
           name: "Check CloudFormation templates"
           command: cfn-lint --template cloud_formation/*.yml
-  server-test:
+  test-server:
     docker:
       - image: cimg/ruby:3.1.1
     steps:
@@ -61,3 +61,4 @@ workflows:
     jobs:
       - say-hello
       - check-cfn-templates
+      - test-server
