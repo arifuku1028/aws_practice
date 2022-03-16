@@ -40,7 +40,7 @@ jobs:
           command: cfn-lint --template cloud_formation/*.yml
   server-test:
     docker:
-      - image: cimg: ruby:3.1.1
+      - image: cimg/ruby:3.1.1
     steps:
       - checkout
       - run:
