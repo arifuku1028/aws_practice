@@ -24,7 +24,6 @@ jobs:
       - run:
           name: "Test commands"
           command: |
-            python3 --version
             pwd
             ls
   check-cfn-templates:
@@ -39,6 +38,21 @@ jobs:
       - run:
           name: "Check CloudFormation templates"
           command: cfn-lint --template cloud_formation/*.yml
+  server-test:
+    docker:
+      - image: cimg: ruby:3.1.1
+    steps:
+      - checkout
+      - run:
+          name: Install Serverspec
+          command: |
+            gem install serverspec
+            gem install highline
+      - run:
+          name: Test Server
+          command: |
+            cd server_spec
+            rake spec
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
