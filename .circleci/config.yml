@@ -56,8 +56,8 @@ jobs:
       - run:
           name: SSH Connect
           command: |
-            cat .ssh/config
-            ssh -o StrictHostKeyChecking=no ${USER_NAME}@${HOST_NAME} "pwd"
+            cat ~/.ssh/config
+            # ssh -o StrictHostKeyChecking=no ${USER_NAME}@${HOST_NAME} "pwd"
       - run:
           name: Test Server
           command: |
