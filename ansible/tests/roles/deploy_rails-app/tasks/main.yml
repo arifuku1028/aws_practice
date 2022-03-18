@@ -1,0 +1,32 @@
+---
+- name: Install BUNDLER
+  gem:
+    name: bundler
+    version: 2.2.17
+
+- name: Install RAILS
+  gem:
+    name: rails
+    version: 6.0.3
+
+- name: Make 'rails-app' directory
+  file:
+    path: /srv/rails-app
+    state: directory
+    owner: ec2-user
+    group: ec2-user
+  become: yes
+
+- name: Deploy RAILS-APP
+  git:
+    repo: https://github.com/arifuku1028/practice.git
+    dest: /srv/rails-app/
+
+- name: Install gems
+  shell: bash -lc "bundle install"
+  args:
+    chdir: /srv/rails-app
+
+- name: Rehash RBENV
+  shell: bash -lc "rbenv rehash"
+  changed_when: false

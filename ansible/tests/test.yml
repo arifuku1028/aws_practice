@@ -1,5 +1,7 @@
 ---
-- name: Install Apache.
-  hosts: 54.250.205.125
-  become: yes
-  gather_facts: no
+- hosts: ec2
+  roles:
+    # - prepare
+    # - install_ruby
+    # - deploy_rails-app
+    - setup_nginx

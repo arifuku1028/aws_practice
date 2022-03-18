@@ -1,8 +1,2 @@
 ---
 # defaults file for ansible
-- hosts: 54.250.205.125
-  tasks:
-    - name: test-playbook
-      file:
-        path: /tmp/hoge.txt
-        state: touch

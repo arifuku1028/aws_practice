@@ -1,0 +1,33 @@
+---
+- name: Enable to install NGINX
+  shell: amazon-linux-extras enable nginx1
+  become: yes
+
+- name: Install NGINX
+  yum:
+    name: nginx
+    state: latest
+  become: yes
+
+- name: Put 'rails.conf' file
+  template:
+    src: rails.conf.j2
+    dest: /etc/nginx/conf.d/rails.conf
+  become: yes
+
+- name: Check UNICORN process
+  shell: bash -lc "ps aux | grep unicorn | grep -v grep"
+  register: unicorn_check
+  changed_when: False
+
+- name: Start Unicorn
+  shell: bash -lc "rake unicorn:start"
+  args:
+    chdir: /srv/rails-app
+  when: unicorn_check is succeeded
+
+- name: Start NGINX
+  service:
+    name: nginx
+    state: started
+    enabled: yes
