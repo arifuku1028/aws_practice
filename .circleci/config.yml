@@ -89,8 +89,8 @@ jobs:
 
   ansible-provisioning:
     executor:
-      ansible-playbook/default:
-        python-version: "3.8"
+      - ansible-playbook/default:
+          python-version: "3.8"
     steps:
       - checkout
       - add_ssh_keys:
