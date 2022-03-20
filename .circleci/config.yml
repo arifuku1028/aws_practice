@@ -3,6 +3,7 @@
 version: 2.1
 
 orbs:
+  aws-cli: circleci/aws-cli@2.1.0
   aws-cloudformation: orbss/aws-cloudformation@0.1.6
   ansible-playbook: orbss/ansible-playbook@0.0.5
 
@@ -42,11 +43,11 @@ jobs:
           command: cfn-lint --template cloud_formation/*.yml
 
   cfn-deploy-stack:
-    executor: aws-cloudformation/default
+    executor: aws-cli/default
     steps:
       - checkout
       - aws-cloudformation/deploy:
-          stack-name: practice-vpc
+          stack-name: ${STACK_PREFIX}-vpc
           template-file-path: cloud_formation/01_vpc.yml
           extra-arguments: --no-fail-on-empty-changeset
 
