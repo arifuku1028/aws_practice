@@ -1,5 +1,5 @@
 # CircleCI　Pipeline
-* 概要
+* 概要  
   CircleCIにより、AWS上におけるサーバー・WEBアプリの構築からテストまでを自動実行するもの
 
 * CircleCIによる実行項目 （".circleci/config.yml"参照）
