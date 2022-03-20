@@ -20,10 +20,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: Say hello
+          command: echo Hello, World!
       - run:
-          name: "Test commands"
+          name: Test commands
           command: |
             pwd
             ls
@@ -34,12 +34,12 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Install cfn-lint"
+          name: Install cfn-lint
           command: |
             python3 -m pip install --upgrade pip
             pip install cfn-lint
       - run:
-          name: "Check CloudFormation templates"
+          name: Check CloudFormation templates
           command: cfn-lint --template cloud_formation/*.yml
 
   cfn-deploy-stack:
@@ -101,7 +101,9 @@ jobs:
 
   serverspec-test:
     docker:
-      - image: cimg/ruby:2.6
+      - image:
+          cimg/ruby:2.6:
+            python-version: 3.8
     steps:
       - checkout
       - add_ssh_keys:
