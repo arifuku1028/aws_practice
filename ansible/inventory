@@ -5,4 +5,3 @@
 [ec2:vars]
 ansible_ssh_port=22
 ansible_user:=ec2-user
-host_key_checking:=False
