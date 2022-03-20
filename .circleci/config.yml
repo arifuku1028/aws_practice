@@ -88,13 +88,15 @@ jobs:
           extra-arguments: --no-fail-on-empty-changeset
 
   ansible-provisioning:
-    executor: ansible-playbook/default
+    docker:
+      - image: cimg/python:3.8
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
             - "64:89:d6:97:cd:b0:23:65:76:dc:ac:3d:e8:17:8b:a0"
       - ansible-playbook/install
+          version: "2.12.2"
       - ansible-playbook/playbook:
           playbook: ansible/playbook.yml
           playbook-options: "-i ansible/inventory"
