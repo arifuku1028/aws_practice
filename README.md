@@ -16,5 +16,5 @@
   * Serverspecによるテスト
     * Serverspecのインストール
     * Serverspecの実行
-* ワークフロー図
+* ワークフロー図（実行結果）
 	![ワークフロー図](circleci_workflow.png)
