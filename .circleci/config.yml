@@ -46,6 +46,7 @@ jobs:
     executor: aws-cli/default
     steps:
       - checkout
+      - aws-cli/install
       - aws-cloudformation/deploy:
           stack-name: ${STACK_PREFIX}-vpc
           template-file-path: cloud_formation/01_vpc.yml
