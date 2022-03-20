@@ -23,12 +23,20 @@ Resources:
     Type: AWS::S3::BucketPolicy
     Properties:
       Bucket: !Ref myS3Bucket
-      PolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal: "*"
-            Action:
-              - s3:GetObject
-              - s3:GetObjectVersion
-            Resource: !Sub arn:aws:s3:::${PREFIX}-${BucketName}/*
+      PolicyDocument: !Sub |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": "*",
+              "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion"
+              ],
+              "Resource": [
+                "arn:aws:s3:::${PREFIX}-${BucketName}/*"
+              ]
+            }
+          ]
+        }
