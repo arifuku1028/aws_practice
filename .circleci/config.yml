@@ -101,7 +101,6 @@ jobs:
           command: |
             echo '[defaults]' >> ~/.ansible.cfg
             echo 'host_key_checking = False' >> ~/.ansible.cfg
-            cat ~/.ansible.cfg
       - ansible-playbook/playbook:
           playbook: ansible/playbook.yml
           playbook-options: "-i ansible/inventory -u ec2-user"
