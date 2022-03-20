@@ -46,42 +46,42 @@ jobs:
     steps:
       - checkout
       - aws-cloudformation/deploy:
-          stack-name: ${STACK_PREFIX}-vpc
+          stack-name: $STACK_PREFIX-vpc
           template-file-path: cloud_formation/01_vpc.yml
           extra-arguments: --no-fail-on-empty-changeset
 
       - aws-cloudformation/deploy:
-          stack-name: ${STACK_PREFIX}-subnet
+          stack-name: $STACK_PREFIX-subnet
           template-file-path: cloud_formation/02_subnet.yml
           extra-arguments: --no-fail-on-empty-changeset
 
       - aws-cloudformation/deploy:
-          stack-name: ${STACK_PREFIX}-sg
+          stack-name: $STACK_PREFIX-sg
           template-file-path: cloud_formation/03_sg.yml
           extra-arguments: --no-fail-on-empty-changeset
 
       - aws-cloudformation/deploy:
-          stack-name: ${STACK_PREFIX}-iam
+          stack-name: $STACK_PREFIX-iam
           template-file-path: cloud_formation/04_iam.yml
           extra-arguments: --no-fail-on-empty-changeset
 
       - aws-cloudformation/deploy:
-          stack-name: ${STACK_PREFIX}-ec2
+          stack-name: $STACK_PREFIX-ec2
           template-file-path: cloud_formation/05_ec2.yml
           extra-arguments: --no-fail-on-empty-changeset
 
       - aws-cloudformation/deploy:
-          stack-name: ${STACK_PREFIX}-elb
+          stack-name: $STACK_PREFIX-elb
           template-file-path: cloud_formation/06_elb.yml
           extra-arguments: --no-fail-on-empty-changeset
 
       - aws-cloudformation/deploy:
-          stack-name: ${STACK_PREFIX}-s3
+          stack-name: $STACK_PREFIX-s3
           template-file-path: cloud_formation/07_s3.yml
           extra-arguments: --no-fail-on-empty-changeset
 
       - aws-cloudformation/deploy:
-          stack-name: ${STACK_PREFIX}-rds
+          stack-name: $STACK_PREFIX-rds
           template-file-path: cloud_formation/08_rds.yml
           extra-arguments: --no-fail-on-empty-changeset
 
