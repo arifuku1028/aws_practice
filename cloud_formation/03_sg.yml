@@ -5,7 +5,7 @@ Description: "CloudFormation Templete for creating SecurityGroup"
 Parameters:
   PREFIX:
     Type: String
-    Default: "practice"
+    Default: practice
 
 Resources:
   # EC2 SecurityGroup

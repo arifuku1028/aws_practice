@@ -1,0 +1,62 @@
+---
+####################
+### INSTALL RUBY ###
+####################
+
+- name: Check 'rbenv' installed
+  shell: bash -lc "{{ rbenv_dir }}/bin/rbenv --version"
+  register: check_rbenv_installed
+  changed_when: false
+  ignore_errors: true
+
+- name: Install 'rbenv'
+  git:
+    repo: https://github.com/rbenv/rbenv.git
+    dest: "{{ rbenv_dir }}"
+    version: master
+  when: check_rbenv_installed is failed
+
+- name: Install 'ruby-build'
+  git:
+    repo: https://github.com/rbenv/ruby-build.git
+    dest: "{{ rbenv_dir }}/plugins/ruby-build"
+    version: master
+  when: check_rbenv_installed is failed
+
+- name: Run 'install.sh' to install ruby
+  command: bash {{ rbenv_dir }}/plugins/ruby-build/install.sh
+  become: true
+  when: check_rbenv_installed is failed
+
+- name: Add rbenv-PATH to '.bash_profile'
+  blockinfile:
+    path: "{{ home_dir }}/.bash_profile"
+    create: true
+    insertbefore: "export PATH"
+    block: |
+      export RBENV_ROOT={{ rbenv_dir }}
+      export PATH="$RBENV_ROOT/bin:$PATH"
+      eval "$(rbenv init -)"
+  when: check_rbenv_installed is failed
+
+- name: Check 'ruby' installed
+  shell: bash -lc "rbenv versions | grep {{ ruby_version }}"
+  register: check_ruby_installed
+  changed_when: false
+  ignore_errors: true
+
+- name: Install 'ruby'
+  shell: bash -lc "RUBY_CONFIGURE_OPTS=--disable-install-doc rbenv install {{ ruby_version }}"
+  args:
+    creates: "{{ ruby_dir }}"
+  when: check_ruby_installed is failed
+
+- name: Check global 'ruby'
+  shell: bash -lc "rbenv version | grep {{ ruby_version }}"
+  register: check_global_ruby
+  changed_when: False
+  ignore_errors: true
+
+- name: Set global 'ruby'
+  shell: bash -lc "rbenv global {{ ruby_version }}"
+  when: check_global_ruby is failed

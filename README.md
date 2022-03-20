@@ -1,6 +1,23 @@
-# aws_practice
-1.「cloud_formation」
-  - CloudFormationで作成したテンプレート/構成図
+# CircleCI　Pipeline
+* 概要  
+  CircleCIにより、AWS上におけるサーバー・WEBアプリの構築からテストまでを自動実行するもの
 
-2.「server_spec」
-  - Serverspecで作成したテストコード等
+* CircleCIによる実行項目 （".circleci/config.yml"参照）
+  * 実行確認
+    * 'Say hello'の実行
+    * 'pwd','ls'の実行
+  * cfn-lintによるCloudFormationテンプレートのチェック
+    * cfn-lintのインストール
+    * cfn-lintを実行
+  * CloudFormationテンプレートからのスタック作成・変更
+    * AWS CLIで"cloudformation deploy"を実行（orbsを利用）
+  * Ansibleによる環境構築
+    * SSHキーの登録
+    * Ansibleのインストール
+    * 初回SSH接続時の確認をスキップする設定（"~/.ansible.cfg"に記載）
+    * Ansibleの実行
+  * Serverspecによるサーバーテスト
+    * Serverspecのインストール
+    * Serverspecの実行
+* ワークフロー図（実行結果）
+	![ワークフロー図](circleci_workflow.png)

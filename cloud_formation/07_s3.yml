@@ -5,10 +5,10 @@ Description: "CloudFormation Templete for creating S3"
 Parameters:
   PREFIX:
     Type: String
-    Default: "practice"
+    Default: practice
   BucketName:
     Type: String
-    Default: "practice-s3-20220210"
+    Default: s3-20220210
 
 Resources:
   # S3 Bucket
@@ -16,7 +16,7 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       AccessControl: Private
-      BucketName: !Sub ${BucketName}
+      BucketName: !Sub ${PREFIX}-${BucketName}
 
   # Bucket Policy
   s3BucketPolicy:
@@ -24,10 +24,12 @@ Resources:
     Properties:
       Bucket: !Ref myS3Bucket
       PolicyDocument:
+        Version: 2012-10-17
         Statement:
-          Effect: Allow
-          Principal: "*"
-          Action:
-            - s3:GetObject
-            - s3:GetObjectVersion
-          Resource: !Sub arn:aws:s3:::${BucketName}/*
+          - Effect: Allow
+            Principal: "*"
+            Action:
+              - s3:GetObject
+              - s3:GetObjectVersion
+            Resource:
+              - !Sub arn:aws:s3:::${PREFIX}-${BucketName}/*

@@ -5,7 +5,7 @@ Description: "CloudFormation Templete for creating ELB (ALB)"
 Parameters:
   PREFIX:
     Type: String
-    Default: "practice"
+    Default: practice
 
 Resources:
   # ELB

@@ -15,10 +15,18 @@ else
 end
 
 host = ENV['TARGET_HOST']
-
 options = Net::SSH::Config.for(host)
 
 options[:user] ||= Etc.getlogin
+
+# add ssh options
+properties = YAML.load_file("hosts.yml")
+unless properties[host][:ssh_opts].nil?
+  options.merge!(properties[host][:ssh_opts])
+end
+
+# add pty option
+set :request_pty, true
 
 set :host,        options[:host_name] || host
 set :ssh_options, options

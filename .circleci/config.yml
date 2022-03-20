@@ -2,6 +2,11 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+orbs:
+  aws-cli: circleci/aws-cli@2.1.0
+  aws-cloudformation: orbss/aws-cloudformation@0.1.6
+  ansible-playbook: orbss/ansible-playbook@0.0.5
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -15,12 +20,124 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: Say hello
+          command: echo Hello, World!
+      - run:
+          name: Test commands
+          command: |
+            pwd
+            ls
+
+  cfn-lint-check:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - run:
+          name: Install cfn-lint
+          command: |
+            python3 -m pip install --upgrade pip
+            pip install cfn-lint
+      - run:
+          name: Check CloudFormation templates
+          command: cfn-lint --template cloud_formation/*.yml
+
+  cfn-deploy-stack:
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - aws-cli/install
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-vpc
+          template-file-path: cloud_formation/01_vpc.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-subnet
+          template-file-path: cloud_formation/02_subnet.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-sg
+          template-file-path: cloud_formation/03_sg.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-iam
+          template-file-path: cloud_formation/04_iam.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-ec2
+          template-file-path: cloud_formation/05_ec2.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-elb
+          template-file-path: cloud_formation/06_elb.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-s3
+          template-file-path: cloud_formation/07_s3.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-rds
+          template-file-path: cloud_formation/08_rds.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+  ansible-provisioning:
+    executor: ansible-playbook/default
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "64:89:d6:97:cd:b0:23:65:76:dc:ac:3d:e8:17:8b:a0"
+      - ansible-playbook/install:
+          version: "2.9"
+      - run:
+          name: Set no checking host-key
+          command: |
+            echo '[defaults]' >> ~/.ansible.cfg
+            echo 'host_key_checking = False' >> ~/.ansible.cfg
+      - ansible-playbook/playbook:
+          playbook: ansible/playbook.yml
+          playbook-options: "-i ansible/inventory -u ec2-user"
+
+  serverspec-test:
+    docker:
+      - image: cimg/ruby:2.6
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "64:89:d6:97:cd:b0:23:65:76:dc:ac:3d:e8:17:8b:a0"
+      - run:
+          name: Install Serverspec
+          command: |
+            gem install rake
+            gem install highline
+            gem install serverspec
+      - run:
+          name: Test Server
+          command: |
+            cd server_spec
+            rake spec
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  my-workflow:
     jobs:
       - say-hello
+      - cfn-lint-check
+      - cfn-deploy-stack:
+          requires:
+            - cfn-lint-check
+      - ansible-provisioning:
+          requires:
+            - cfn-deploy-stack
+      - serverspec-test:
+          requires:
+            - ansible-provisioning

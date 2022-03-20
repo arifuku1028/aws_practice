@@ -1,0 +1,33 @@
+---
+###################
+### PRE PROCESS ###
+###################
+
+- name: Update 'yum'
+  yum:
+    name: "*"
+    state: latest
+  become: true
+- name: Install packages
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - git
+    - gcc
+    - gcc-c++
+    - patch
+    - rpm-build
+    - mariadb
+    - mariadb-devel
+    - gdbm-devel
+    - zlib-devel
+    - openssl-devel
+    - ImageMagick-devel
+    - readline-devel
+    - libcurl-devel
+    - libffi-devel
+    - libicu-devel
+    - libxml2-devel
+    - libxslt-devel
+    - libyaml-devel
+  become: true

@@ -5,7 +5,14 @@ Description: "CloudFormation Templete for creating RDS"
 Parameters:
   PREFIX:
     Type: String
-    Default: "practice"
+    Default: practice
+  AZ:
+    Type: String
+    Default: ap-northeast-1a
+  MasterUserPASS:
+    Type: String
+    Default: password
+    NoEcho: true
 
 Resources:
   # DB Instance
@@ -18,16 +25,15 @@ Resources:
       Engine: mysql
       EngineVersion: 8.0.23
       MasterUsername: admin
-      MasterUserPassword: password
+      MasterUserPassword: !Ref MasterUserPASS
       DBName: !Sub ${PREFIX}
       DBParameterGroupName: !Ref rdsParameterGroup
-      OptionGroupName: !Ref rdsOptionGroup
       # ストレージ関係
       AllocatedStorage: 20
       StorageType: gp2
       StorageEncrypted: false
       # ネットワーク関係
-      AvailabilityZone: ap-northeast-1a
+      AvailabilityZone: !Ref AZ
       DBSubnetGroupName: !Ref rdsSubnetGroup
       MultiAZ: false
       Port: 3306
@@ -56,17 +62,6 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub ${PREFIX}-rds-parametergroup
-
-  # OptionGroup
-  rdsOptionGroup:
-    Type: AWS::RDS::OptionGroup
-    Properties:
-      OptionGroupDescription: "OptionGroup for RDS"
-      EngineName: mysql
-      MajorEngineVersion: 8.0
-      Tags:
-        - Key: Name
-          Value: !Sub ${PREFIX}-rds-optiongroup
 
   # SubnetGroup
   rdsSubnetGroup:

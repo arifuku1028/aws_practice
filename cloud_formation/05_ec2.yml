@@ -5,7 +5,7 @@ Description: "CloudFormation Templete for creating EC2"
 Parameters:
   PREFIX:
     Type: String
-    Default: "practice"
+    Default: practice
 
 Resources:
   # EC2 Instance(AZ:1a)
@@ -23,10 +23,6 @@ Resources:
         #!/bin/bash -ex
         yum update -y
         yum install -y git gcc gcc-c++ patch rpm-build mariadb mariadb-devel gdbm-devel zlib-devel openssl-devel ruby-devel rubygems-devel ImageMagick-devel readline-devel libcurl-devel libffi-devel libicu-devel libxml2-devel libxslt-devel libyaml-devel
-        amazon-linux-extras install -y nginx1
-        curl -sL https://rpm.nodesource.com/setup_16.x | bash -
-        yum install -y nodejs
-        npm install -g yarn
       Tags:
         - Key: Name
           Value: !Sub ${PREFIX}-ec2-1a
@@ -44,11 +40,7 @@ Resources:
       UserData: !Base64 |
         #!/bin/bash -ex
         yum update -y
-        yum install -y git gcc gcc-c++ patch rpm-build mariadb mariadb-devel gdbm-devel zlib-devel openssl-devel ruby-devel rubygems-devel ImageMagick-devel readline-devel libcurl-devel libffi-devel libicu-devel libxml2-devel libxslt-devel libyaml-devel
-        amazon-linux-extras install -y nginx1
-        curl -sL https://rpm.nodesource.com/setup_16.x | bash -
-        yum install -y nodejs
-        npm install -g yarn
+        yum install -y git gcc gcc-c++ patch rpm-build mariadb mariadb-devel gdbm-devel zlib-devel openssl-devel ImageMagick-devel readline-devel libcurl-devel libffi-devel libicu-devel libxml2-devel libxslt-devel libyaml-devel
       Tags:
         - Key: Name
           Value: !Sub ${PREFIX}-ec2-1c
