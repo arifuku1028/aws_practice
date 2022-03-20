@@ -1,7 +1,4 @@
 # CloudFormation Templates
-* 構成図
-	![構成図](cfn-diagram.png)
-
 * テンプレートの内容
 	* '01_vpc.yml'
 		* VPCを作成
@@ -28,3 +25,5 @@
 		* RDSを作成
 		* パラメータグループを作成
 		* サブネットグループを作成
+* 構成図
+		![構成図](cfn-diagram.png)
