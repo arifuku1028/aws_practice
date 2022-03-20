@@ -46,7 +46,7 @@ jobs:
     steps:
       - checkout
       - aws-cloudformation/deploy:
-          stack-name: "${STACK_PREFIX}-vpc"
+          stack-name: practice-vpc
           template-file-path: cloud_formation/01_vpc.yml
           extra-arguments: --no-fail-on-empty-changeset
 
