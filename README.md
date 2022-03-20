@@ -1,4 +1,7 @@
 # CircleCI　Pipeline
+* 概要
+  CircleCIにより、AWS上におけるサーバー・WEBアプリの構築からテストまでを自動実行するもの
+
 * CircleCIによる実行項目 （".circleci/config.yml"参照）
   * 実行確認
     * 'Say hello'の実行
@@ -13,7 +16,7 @@
     * Ansibleのインストール
     * 初回SSH接続時の確認をスキップする設定（"~/.ansible.cfg"に記載）
     * Ansibleの実行
-  * Serverspecによるテスト
+  * Serverspecによるサーバーテスト
     * Serverspecのインストール
     * Serverspecの実行
 * ワークフロー図（実行結果）
