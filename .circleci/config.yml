@@ -88,7 +88,9 @@ jobs:
           extra-arguments: --no-fail-on-empty-changeset
 
   ansible-provisioning:
-    executor: ansible-playbook/default
+    executor:
+      ansible-playbook/default:
+        python-version: "3.8"
     steps:
       - checkout
       - add_ssh_keys:
@@ -101,9 +103,7 @@ jobs:
 
   serverspec-test:
     docker:
-      - image:
-          cimg/ruby:2.6:
-            python-version: 3.8
+      - image: cimg/ruby:2.6
     steps:
       - checkout
       - add_ssh_keys:
