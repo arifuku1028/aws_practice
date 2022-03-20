@@ -20,7 +20,7 @@
   when: check_nodejs.stat.exists == false
 
 - name: Install 'Yarn' node.js package globally
-  community.general.npm:
+  npm:
     name: yarn
     global: true
   become: true
