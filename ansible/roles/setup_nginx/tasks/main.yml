@@ -1,0 +1,50 @@
+---
+###################
+### SETUP NGINX ###
+###################
+
+- name: Put 'unicorn.rb' file for setting 'unicorn'
+  template:
+    src: unicorn.rb.j2
+    dest: "{{ app_dir }}/config/unicorn.rb"
+
+- name: Put 'unicorn.rake' file for switching 'unicorn' process
+  template:
+    src: unicorn.rake.j2
+    dest: "{{ app_dir }}/lib/tasks/unicorn.rake"
+
+- name: Enable to install 'nginx'
+  command: amazon-linux-extras enable nginx1
+  become: true
+  changed_when: false
+
+- name: Install 'nginx'
+  yum:
+    name: nginx
+    state: present
+  become: true
+
+- name: Put 'rails.conf' file for setting'nginx'
+  template:
+    src: rails.conf.j2
+    dest: /etc/nginx/conf.d/rails.conf
+  become: true
+
+- name: Check 'unicorn' running
+  shell: bash -lc "ps aux | grep unicorn | grep -v grep"
+  register: check_unicorn_running
+  changed_when: false
+  ignore_errors: true
+
+- name: Start Unicorn
+  shell: bash -lc "rake unicorn:start"
+  args:
+    chdir: "{{ app_dir }}"
+  when: check_unicorn_running is failed
+
+- name: Start 'nginx'
+  service:
+    name: nginx
+    state: started
+    enabled: true
+  become: true

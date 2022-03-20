@@ -1,0 +1,58 @@
+---
+########################
+### DEPLOY RAILS-APP ###
+########################
+
+- name: Check app directory exists
+  stat:
+    path: "{{ app_dir }}"
+  register: check_app_directory
+
+- name: Make 'rails-app' directory
+  file:
+    path: "{{ app_dir }}"
+    state: directory
+    owner: ec2-user
+    group: ec2-user
+    mode: 0755
+  become: true
+  when: check_app_directory.stat.exists == false
+
+- name: Clone 'rails-app' from remote-repository
+  git:
+    repo: "{{ app_repo }}"
+    dest: "{{ app_dir }}"
+    version: main
+  when: check_app_directory.stat.exists == false
+
+- name: Install 'rails'
+  gem:
+    name: rails
+    executable: "{{ rbenv_dir }}/shims/gem"
+    user_install: false
+    version: "{{ rails_version }}"
+
+- name: Install 'bundler'
+  gem:
+    name: bundler
+    executable: "{{ rbenv_dir }}/shims/gem"
+    user_install: false
+    version: "{{ bundler_version }}"
+
+- name: Install gems for 'rails-app'
+  shell: bash -lc "bundle install"
+  args:
+    chdir: "{{ app_dir }}"
+  when: check_app_directory.stat.exists == false
+
+- name: Update yarn
+  shell: bash -lc "yarn install --check-files"
+  args:
+    chdir: "{{ app_dir }}"
+  when: check_app_directory.stat.exists == false
+
+- name: Install 'webpacker'
+  shell: bash -lc "rails webpacker:install"
+  args:
+    chdir: "{{ app_dir }}"
+  when: check_app_directory.stat.exists == false

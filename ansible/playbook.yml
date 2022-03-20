@@ -1,0 +1,18 @@
+---
+- hosts: ec2
+  vars:
+    app_repo: https://github.com/arifuku1028/rails-app.git
+    app_dir: /srv/rails-app
+    home_dir: /home/ec2-user
+    rbenv_dir: "{{ home_dir }}/.rbenv"
+    ruby_version: 2.6.3
+    ruby_dir: "{{ rbenv_dir }}/versions/{{ ruby_version }}"
+    bundler_version: 2.2.17
+    rails_version: 6.0.3
+    node_major_version: 16
+  roles:
+    - pre_process
+    - install_ruby
+    - install_yarn
+    - deploy_rails-app
+    - setup_nginx

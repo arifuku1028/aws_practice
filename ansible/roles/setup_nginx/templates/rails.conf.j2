@@ -1,5 +1,5 @@
 upstream unicorn {
-    server  unix:/srv/rails-app/tmp/unicorn.sock;
+    server  unix:{{ app_dir }}/tmp/unicorn.sock;
 }
 
 server {

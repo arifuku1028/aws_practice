@@ -23,10 +23,6 @@ Resources:
         #!/bin/bash -ex
         yum update -y
         yum install -y git gcc gcc-c++ patch rpm-build mariadb mariadb-devel gdbm-devel zlib-devel openssl-devel ruby-devel rubygems-devel ImageMagick-devel readline-devel libcurl-devel libffi-devel libicu-devel libxml2-devel libxslt-devel libyaml-devel
-        amazon-linux-extras install -y nginx1
-        curl -sL https://rpm.nodesource.com/setup_16.x | bash -
-        yum install -y nodejs
-        npm install -g yarn
       Tags:
         - Key: Name
           Value: !Sub ${PREFIX}-ec2-1a
@@ -45,10 +41,6 @@ Resources:
         #!/bin/bash -ex
         yum update -y
         yum install -y git gcc gcc-c++ patch rpm-build mariadb mariadb-devel gdbm-devel zlib-devel openssl-devel ImageMagick-devel readline-devel libcurl-devel libffi-devel libicu-devel libxml2-devel libxslt-devel libyaml-devel
-        amazon-linux-extras install -y nginx1
-        curl -sL https://rpm.nodesource.com/setup_16.x | bash -
-        yum install -y nodejs
-        npm install -g yarn
       Tags:
         - Key: Name
           Value: !Sub ${PREFIX}-ec2-1c

@@ -1,0 +1,26 @@
+---
+####################
+### INSTALL YARN ###
+####################
+
+- name: Check 'node.js' exists
+  stat:
+    path: /usr/bin/node
+  register: check_nodejs
+
+- name: Add 'node.js' repository
+  shell: bash -lc "curl -sL https://rpm.nodesource.com/setup_{{ node_major_version }}.x | bash -"
+  become: true
+  when: check_nodejs.stat.exists == false
+
+- name: Install 'node.js'
+  yum:
+    name: nodejs
+  become: true
+  when: check_nodejs.stat.exists == false
+
+- name: Install 'Yarn' node.js package globally
+  community.general.npm:
+    name: yarn
+    global: true
+  become: true

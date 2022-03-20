@@ -2,10 +2,9 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-executors:
-  my-executor:
-    docker:
-      - image: cimg/base:stable
+orbs:
+  aws-cloudformation: orbss/aws-cloudformation@0.1.6
+  ansible-playbook: orbss/ansible-playbook@0.0.5
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -13,7 +12,8 @@ jobs:
   say-hello:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    executor: my-executor
+    docker:
+      - image: cimg/base:stable
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
@@ -26,7 +26,8 @@ jobs:
           command: |
             pwd
             ls
-  check-cfn-templates:
+
+  cfn-lint-check:
     docker:
       - image: cimg/python:3.8
     steps:
@@ -39,7 +40,64 @@ jobs:
       - run:
           name: "Check CloudFormation templates"
           command: cfn-lint --template cloud_formation/*.yml
-  test-server:
+
+  cfn-deploy-stack:
+    executor: aws-cloudformation/default
+    steps:
+      - checkout
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-vpc
+          template-file-path: cloud_formation/01_vpc.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-subnet
+          template-file-path: cloud_formation/02_subnet.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-sg
+          template-file-path: cloud_formation/03_sg.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-iam
+          template-file-path: cloud_formation/04_iam.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-ec2
+          template-file-path: cloud_formation/05_ec2.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-elb
+          template-file-path: cloud_formation/06_elb.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-s3
+          template-file-path: cloud_formation/07_s3.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+      - aws-cloudformation/deploy:
+          stack-name: ${STACK_PREFIX}-rds
+          template-file-path: cloud_formation/08_rds.yml
+          extra-arguments: --no-fail-on-empty-changeset
+
+  ansible-provisioning:
+    executor: ansible-playbook/default
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "64:89:d6:97:cd:b0:23:65:76:dc:ac:3d:e8:17:8b:a0"
+      - ansible-playbook/install
+      - ansible-playbook/playbook:
+          playbook: ansible/playbook.yml
+          playbook-options: "-i ansible/inventory"
+
+  serverspec-test:
     docker:
       - image: cimg/ruby:2.6
     steps:
@@ -54,11 +112,6 @@ jobs:
             gem install highline
             gem install serverspec
       - run:
-          name: SSH Connect
-          command: |
-            cat ~/.ssh/config
-            # ssh -o StrictHostKeyChecking=no ${USER_NAME}@${HOST_NAME} "pwd"
-      - run:
           name: Test Server
           command: |
             cd server_spec
@@ -70,7 +123,13 @@ workflows:
   my-workflow:
     jobs:
       - say-hello
-      - test-server
-      - check-cfn-templates:
+      - cfn-lint-check
+      - cfn-deploy-stack:
           requires:
-            - test-server
+            - cfn-lint-check
+      - ansible-provisioning:
+          requires:
+            - cfn-deploy-stack
+      - serverspec-test:
+          requires:
+            - ansible-provisioning

@@ -1,7 +1,0 @@
----
-- hosts: ec2
-  roles:
-    # - prepare
-    # - install_ruby
-    # - deploy_rails-app
-    - setup_nginx
