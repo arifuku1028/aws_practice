@@ -89,7 +89,7 @@ jobs:
 
   ansible-provisioning:
     docker:
-      - image: cimg/python:3.8
+      - image: cimg/python:3.8-node
     steps:
       - checkout
       - add_ssh_keys:
